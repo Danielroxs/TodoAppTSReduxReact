@@ -1,26 +1,60 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { Todos } from "./components/Todos";
+import { type TodoId, type Todo as TodoType } from "./types";
 
 const mockTodos = [
   {
     id: 1,
-    title: "todo 1",
-    completed: false,
+    title: "Hacer las compras",
+    completed: true,
   },
   {
     id: 2,
-    title: "todo 2",
+    title: "Aprender React con TypeScript",
     completed: false,
   },
   {
     id: 3,
-    title: "todo 3",
+    title: "Sacar la basura",
     completed: false,
   },
 ];
 
 const App = (): JSX.Element => {
   const [todos, setTodos] = useState(mockTodos);
-  return <h1>todo mvc</h1>;
+
+  const handleRemove = ({ id }: TodoId): void => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
+
+  const handleCompleted = ({
+    id,
+    completed,
+  }: Pick<TodoType, "id" | "completed">): void => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          completed,
+        };
+      }
+
+      return todo;
+    });
+
+    setTodos(newTodos);
+  };
+
+  return (
+    <div className="todoapp">
+      <Todos
+        onToggleCompleteTodo={handleCompleted}
+        onRemoveTodo={handleRemove}
+        todos={todos}
+      />
+    </div>
+  );
 };
 
 export default App;

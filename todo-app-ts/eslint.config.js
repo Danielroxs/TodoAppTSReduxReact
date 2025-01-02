@@ -17,6 +17,7 @@ export default [
     },
     rules: {
       "react/react-in-jsx-scope": "off", // No requiere que React esté en alcance para JSX.
+      "react/prop-types": "off",         // No requiere PropTypes.
       "react/jsx-uses-react": "off",    // Desactiva la regla obsoleta para React en JSX.
     },
   },
