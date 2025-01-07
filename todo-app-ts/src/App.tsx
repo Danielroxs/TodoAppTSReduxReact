@@ -1,59 +1,43 @@
-import React, { useState } from "react";
+import { Copyright } from "./components/Copyright";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
 import { Todos } from "./components/Todos";
-import { type TodoId, type Todo as TodoType } from "./types";
+import { useTodos } from "./hooks/useTodos";
 
-const mockTodos = [
-  {
-    id: 1,
-    title: "Hacer las compras",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Aprender React con TypeScript",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Sacar la basura",
-    completed: false,
-  },
-];
-
-const App = (): JSX.Element => {
-  const [todos, setTodos] = useState(mockTodos);
-
-  const handleRemove = ({ id }: TodoId): void => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
-  };
-
-  const handleCompleted = ({
-    id,
-    completed,
-  }: Pick<TodoType, "id" | "completed">): void => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          completed,
-        };
-      }
-
-      return todo;
-    });
-
-    setTodos(newTodos);
-  };
+const App: React.FC = () => {
+  const {
+    activeCount,
+    completedCount,
+    filterSelected,
+    handleClearCompleted,
+    handleCompleted,
+    handleFilterChange,
+    handleRemove,
+    handleSave,
+    handleUpdateTitle,
+    todos: filteredTodos,
+  } = useTodos();
 
   return (
-    <div className="todoapp">
-      <Todos
-        onToggleCompleteTodo={handleCompleted}
-        onRemoveTodo={handleRemove}
-        todos={todos}
-      />
-    </div>
+    <>
+      <div className="todoapp">
+        <Header saveTodo={handleSave} />
+        <Todos
+          removeTodo={handleRemove}
+          setCompleted={handleCompleted}
+          setTitle={handleUpdateTitle}
+          todos={filteredTodos}
+        />
+        <Footer
+          handleFilterChange={handleFilterChange}
+          completedCount={completedCount}
+          activeCount={activeCount}
+          filterSelected={filterSelected}
+          onClearCompleted={handleClearCompleted}
+        />
+      </div>
+      <Copyright />
+    </>
   );
 };
 
